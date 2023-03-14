@@ -1,4 +1,4 @@
-var { CLIENT_ID, CLIENT_SECRET, SESSION_SECRET } = require('./config/reddit_api.js');
+var { AUTH, SESSION_SECRET } = require('./config/reddit_api.js');
 
 const express = require('express');
 const axios = require('axios');
@@ -20,13 +20,11 @@ app.use(
 );
 
 const getRedditToken = async (req) => {
-	let auth = 'Basic ' + Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64');
-
 	const options = {
 		method: 'POST',
 		url: 'https://www.reddit.com/api/v1/access_token',
 		headers: {
-			Authorization: auth,
+			Authorization: AUTH,
 			'Content-Type': 'application/x-www-form-urlencoded',
 		},
 		data: querystring.stringify({
