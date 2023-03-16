@@ -31,8 +31,27 @@ const preprocessing = (text) => {
 	return cleanedText;
 };
 
+const addQueryIntoParams = (queryKey, queryValue, resultQuery) => {
+	if (queryValue) {
+		resultQuery[queryKey] = queryValue;
+	}
+};
+
+const createQuery = (args) => {
+	return (
+		'?' +
+		Object.entries(args)
+			.map(([key, value]) => {
+				return key + '=' + value;
+			})
+			.join('&')
+	);
+};
+
 module.exports = {
 	writeToFile,
 	readFromFile,
 	preprocessing,
+	addQueryIntoParams,
+	createQuery,
 };

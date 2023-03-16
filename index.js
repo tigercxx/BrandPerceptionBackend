@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 
-const { getPostsWithKeywordInSubreddit, getPostsWithKeyword } = require('./reddit_utils.js');
+const { getPosts } = require('./reddit_utils.js');
 var { SESSION_SECRET } = require('./config/reddit_api.js');
 
 const app = express();
@@ -16,13 +16,8 @@ app.use(
 	})
 );
 
-app.get('/reddit/r/:subreddit/q/:question', async (req, res) => {
-	let response = await getPostsWithKeywordInSubreddit(req, res);
-	res.send(response);
-});
-
-app.get('/reddit/q/:question', async (req, res) => {
-	let response = await getPostsWithKeyword(req, res);
+app.get('/reddit/', async (req, res) => {
+	let response = await getPosts(req, res);
 	res.send(response);
 });
 
