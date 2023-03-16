@@ -26,14 +26,14 @@ BrandPerception is an NLP powered tool to assist marketing teams in understandin
 | score        | Retrieves ones with this score operator. May not be accurate   | (=/>/<) 2 |
 | size         | Retrieves stated size. Default is 500 and it is the maximum.   | 50        |
 
-**Example**
+**Example** <br/>
 Gets posts with "iphone" in subreddit "apple" between 2 and 4 days ago with score more than or equals to 2, limited to 10.
 
 ```
 /reddit?subreddit=apple&q=iphone&before=2d&after=4d&score>=2&size=10
 ```
 
-**Output**
+**Output** <br/>
 Data in array with each of the object having
 
 ```
