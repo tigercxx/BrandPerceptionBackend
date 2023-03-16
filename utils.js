@@ -16,6 +16,10 @@ const readFromFile = (subreddit) => {
 };
 
 const preprocessing = (text) => {
+	if (typeof text == 'undefined') {
+		return '';
+	}
+
 	const cleanedText = text
 		.replace(/(https?:\/\/[^\s]+)/g, '') // remove URLs
 		.replace(/[\n\t]/g, '') // remove newlines
