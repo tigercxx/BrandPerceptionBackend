@@ -11,20 +11,20 @@ BrandPerception is an NLP powered tool to assist marketing teams in understandin
 
 ## API Endpoints
 
-| HTTP Verbs | Endpoints        | Action                                 |
-| ---------- | ---------------- | -------------------------------------- |
-| GET        | /reddit?q=iphone | To retrieve posts with keyword, iphone |
+| HTTP Verbs | Endpoints | Action                                 |
+| ---------- | --------- | -------------------------------------- |
+| GET        | /reddit   | To retrieve posts with keyword, iphone |
 
 ### Querystring for /reddit
 
-| Query String | Description                                                    | Example   |
-| ------------ | -------------------------------------------------------------- | --------- |
-| q            | Retrieves posts with these specific keywords                   | iphone    |
-| subreddit    | Retrieves posts in this subreddit with these specific keywords | apple     |
-| before       | Retrieves posts before x (s,m,h,d)                             | 2h        |
-| after        | Retrieves posts within the past x (s,m,h,d)                    | 4d        |
-| score        | Retrieves ones with this score operator. May not be accurate   | (=/>/<) 2 |
-| size         | Retrieves stated size. Default is 500 and it is the maximum.   | 50        |
+| Query String | Description                                                    | Mandatory? | Example   |
+| ------------ | -------------------------------------------------------------- | ---------- | --------- |
+| q            | Retrieves posts with these specific keywords                   | Y          | iphone    |
+| subreddit    | Retrieves posts in this subreddit with these specific keywords | N          | apple     |
+| before       | Retrieves posts before x (s,m,h,d)                             | N          | 2h        |
+| after        | Retrieves posts within the past x (s,m,h,d)                    | N          | 4d        |
+| score        | Retrieves ones with this score operator. May not be accurate   | N          | (=/>/<) 2 |
+| size         | Retrieves stated size. Default is 500 and it is the maximum.   | N          | 50        |
 
 **Example** <br/>
 Gets posts with "iphone" in subreddit "apple" between 2 and 4 days ago with score more than or equals to 2, limited to 10.
