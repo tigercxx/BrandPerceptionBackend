@@ -2,7 +2,7 @@ var { SESSION_SECRET } = require('./config/reddit_api.js');
 
 const express = require('express');
 const session = require('express-session');
-const { getPostsFromSubreddit } = require('./reddit_utils.js');
+const { getPostsFromSubreddit, getCommentsFromPost } = require('./reddit_utils.js');
 const { readFromFile } = require('./utils.js');
 
 const app = express();
@@ -26,6 +26,16 @@ app.get('/reddit/r/:subreddit', async (req, res) => {
 
 app.get('/reddit/r/:subreddit/read', async (req, res) => {
 	let response = await readFromFile(req.params.subreddit);
+	res.send(response);
+});
+
+app.get('/reddit/r/:subreddit/comments/:postid', async (req, res) => {
+	let response = await getCommentsFromPost(req, res);
+	res.send(response);
+});
+
+app.get('/reddit/comments/:postid', async (req, res) => {
+	let response = await getCommentsFromPost(req, res);
 	res.send(response);
 });
 
