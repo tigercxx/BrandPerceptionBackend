@@ -7,8 +7,6 @@ var { SESSION_SECRET } = require('./config/reddit_api.js');
 const app = express();
 const port = 3000;
 
-const url = 'http://localhost:3000';
-
 // Set up session middleware
 app.use(
 	session({
@@ -29,5 +27,5 @@ app.get('/reddit/q/:question', async (req, res) => {
 });
 
 app.listen(port, () => {
-	console.log(`Server listening at http://localhost:${port}`);
+	console.log(`Server listening at ${port}`);
 });
