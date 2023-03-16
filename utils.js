@@ -15,7 +15,20 @@ const readFromFile = (subreddit) => {
 	return data;
 };
 
+const preprocessing = (text) => {
+	const cleanedText = text
+		.replace(/(https?:\/\/[^\s]+)/g, '') // remove URLs
+		.replace(/[\n\t]/g, '') // remove newlines
+		.replace(/&gt;/g, '') // remove "&gt;"
+		.replace(/[^\w\s]|_/g, ' ') // remove punctuation marks and special characters
+		.replace(/[^\p{L}\p{N}\s]/gu, '')
+		.replace(/  +/g, ' ')
+		.trim(); // remove emojis
+	return cleanedText;
+};
+
 module.exports = {
 	writeToFile,
 	readFromFile,
+	preprocessing,
 };

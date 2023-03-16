@@ -1,13 +1,8 @@
-var { SESSION_SECRET } = require('./config/reddit_api.js');
-
 const express = require('express');
 const session = require('express-session');
-const {
-	getPostsFromSubreddit,
-	getCommentsFromPost,
-	getAllCommentsFromPost,
-} = require('./reddit_utils.js');
-const { readFromFile } = require('./utils.js');
+
+const { getPostsWithKeywordInSubreddit, getPostsWithKeyword } = require('./reddit_utils.js');
+var { SESSION_SECRET } = require('./config/reddit_api.js');
 
 const app = express();
 const port = 3000;
@@ -23,28 +18,13 @@ app.use(
 	})
 );
 
-app.get('/reddit/r/:subreddit', async (req, res) => {
-	let response = await getPostsFromSubreddit(req, res);
+app.get('/reddit/r/:subreddit/q/:question', async (req, res) => {
+	let response = await getPostsWithKeywordInSubreddit(req, res);
 	res.send(response);
 });
 
-app.get('/reddit/r/:subreddit/read', async (req, res) => {
-	let response = await readFromFile(req.params.subreddit);
-	res.send(response);
-});
-
-app.get('/reddit/comments/:postid', async (req, res) => {
-	let response = await getCommentsFromPost(req, res);
-	res.send(response);
-});
-
-app.get('/reddit/comments/:postid/read', async (req, res) => {
-	let response = await readFromFile(req.params.postid);
-	res.send(response);
-});
-
-app.get('/reddit/comments/:postid/all', async (req, res) => {
-	let response = await getAllCommentsFromPost(req, res);
+app.get('/reddit/q/:question', async (req, res) => {
+	let response = await getPostsWithKeyword(req, res);
 	res.send(response);
 });
 

@@ -1,89 +1,34 @@
 const axios = require('axios');
-const querystring = require('querystring');
+const { preprocessing } = require('./utils.js');
 
-const { writeToFile } = require('./utils.js');
-var { AUTH } = require('./config/reddit_api.js');
-
-const getRedditToken = async (req) => {
-	const options = {
-		method: 'POST',
-		url: 'https://www.reddit.com/api/v1/access_token',
-		headers: {
-			Authorization: AUTH,
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
-		data: querystring.stringify({
-			grant_type: 'client_credentials',
-		}),
-	};
-	const response = await axios(options);
-	req.session.redditToken = response.data.access_token;
-	return response.data.access_token;
-};
-
-const getPostsFromSubreddit = async (req, res) => {
-	let token = req.session.redditToken;
-	if (typeof token == 'undefined') {
-		token = await getRedditToken(req);
-	}
-
+const getPostsWithKeywordInSubreddit = async (req, res) => {
 	try {
-		const response = await axios.get(`https://oauth.reddit.com/r/${req.params.subreddit}/new`, {
-			headers: {
-				'User-Agent': 'brandperception/0.1',
-				Authorization: `bearer ${token}`,
-			},
-		});
-		writeToFile(req.params.subreddit, response.data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-		res.status(500).send('An error occurred have token');
-	}
-	return;
-};
-
-const getCommentsFromPost = async (req, res) => {
-	let token = req.session.redditToken;
-	if (typeof token == 'undefined') {
-		token = await getRedditToken(req);
-	}
-
-	try {
-		const response = await axios.get(`https://oauth.reddit.com/comments/${req.params.postid}`, {
-			headers: {
-				'User-Agent': 'brandperception/0.1',
-				Authorization: `bearer ${token}`,
-			},
-		});
-		writeToFile(req.params.postid, response.data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-		res.status(500).send('An error occurred have token');
-	}
-};
-
-const getAllCommentsFromPost = async (req, res) => {
-	let token = req.session.redditToken;
-	if (typeof token == 'undefined') {
-		token = await getRedditToken(req);
-	}
-
-	try {
-		const linkId = `t3_${req.params.postid}`;
-		const children = 'child-id-1,child-id-2,child-id-3';
-
 		const response = await axios.get(
-			`https://oauth.reddit.com/api/morechildren?link_id=${linkId}&children=${children}&api_type=json`,
-			{
-				headers: {
-					'User-Agent': 'brandperception/0.1',
-					Authorization: `bearer ${token}`,
-				},
-			}
+			`https://api.pushshift.io/reddit/search/comment?q=${req.params.question}&subreddit=${req.params.subreddit}&size=500`
 		);
-		return response.data;
+		let data = response.data['data'];
+		let posts = [];
+		for (let i = 0; i < data.length; i++) {
+			posts.push(preprocessing(data[i]['body']));
+		}
+		return posts;
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('An error occurred have token');
+	}
+};
+
+const getPostsWithKeyword = async (req, res) => {
+	try {
+		const response = await axios.get(
+			`https://api.pushshift.io/reddit/search/comment?q=${req.params.question}&size=500`
+		);
+		let data = response.data['data'];
+		let posts = [];
+		for (let i = 0; i < data.length; i++) {
+			posts.push(preprocessing(data[i]['body']));
+		}
+		return posts;
 	} catch (error) {
 		console.error(error);
 		res.status(500).send('An error occurred have token');
@@ -91,7 +36,6 @@ const getAllCommentsFromPost = async (req, res) => {
 };
 
 module.exports = {
-	getPostsFromSubreddit,
-	getCommentsFromPost,
-	getAllCommentsFromPost,
+	getPostsWithKeywordInSubreddit,
+	getPostsWithKeyword,
 };
