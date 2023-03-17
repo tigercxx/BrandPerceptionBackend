@@ -14,6 +14,7 @@ BrandPerception is an NLP powered tool to assist marketing teams in understandin
 | HTTP Verbs | Endpoints | Action                                 |
 | ---------- | --------- | -------------------------------------- |
 | GET        | /reddit   | To retrieve posts with keyword, iphone |
+| POST       | /predict  | To predict for 1 sentence              |
 
 ### Querystring for /reddit
 
@@ -39,3 +40,5 @@ Data in array with each of the object having
 ```
 'body', 'score', 'author', 'permalink', 'created_utc'
 ```
+
+### Details for /predict

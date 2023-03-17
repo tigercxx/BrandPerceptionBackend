@@ -1,6 +1,7 @@
 const express = require("express");
 
 const { getPosts } = require("./utils/reddit_utils.js");
+const fs = require("fs");
 
 const app = express();
 const port = 4242;
@@ -35,6 +36,13 @@ app.post("/predict", async (req, res) => {
             test: inputText,
         });
         console.log(inputText);
+        // writes text to file. will always replace text. needs to have data dir
+        fs.writeFile("./data/sentence.txt", inputText, (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+        console.log("Data has been written to file successfully.");
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
