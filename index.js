@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { getPosts } = require('./reddit_utils.js');
+const { getPosts } = require('./utils/reddit_utils.js');
 
 const app = express();
 const port = 3000;
