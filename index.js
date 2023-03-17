@@ -2,6 +2,8 @@ const express = require("express");
 
 const { getPosts } = require("./utils/reddit_utils.js");
 const fs = require("fs");
+const util = require("util");
+const exec = util.promisify(require("child_process").exec);
 
 const app = express();
 const port = 4242;
@@ -28,21 +30,43 @@ app.get("/reddit/", async (req, res) => {
     res.send(response);
 });
 
+async function runpython() {
+    try {
+        const { stdout, stderr } = await exec(
+            "(cd ../closedAI/e2e; source work_sentence.sh)"
+        );
+        console.log("stdout:", stdout);
+        console.log("stderr:", stderr);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 // Predict a single sentence
 app.post("/predict", async (req, res) => {
+    result = null;
     try {
         const inputText = await req.body.inputText;
-        res.json({
-            test: inputText,
-        });
         console.log(inputText);
-        // writes text to file. will always replace text. needs to have data dir
-        fs.writeFile("./data/sentence.txt", inputText, (err) => {
+        // writes text to file. will always replace text. needs to have data and sentence dir
+        fs.writeFile("../data/sentence/test.txt", inputText, (err) => {
             if (err) {
                 throw err;
             }
         });
         console.log("Data has been written to file successfully.");
+        await runpython();
+        console.log("Output written to output.json");
+
+        fs.readFile("../data/output/output.json", "utf8", (error, data) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            // console.log(JSON.parse(data));
+            result = JSON.parse(data);
+            res.json(result);
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
