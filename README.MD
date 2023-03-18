@@ -54,19 +54,19 @@ Post a body that contains a json to the current endpoint:
 It returns a json of the following:
 
 ```
-    output = {
-        "count": 1,
-        "negative": 1,
-        "positive": 1,
-        "neutral": 0,
-        "data":[
-            {
-                "input": "Food is good, but service is bad",
-                "output": {
-                    "food": "POS",
-                    "service": "NEG"
-                }
+output = {
+    "count": 1,
+    "negative": 1,
+    "positive": 1,
+    "neutral": 0,
+    "data":[
+        {
+            "input": "Food is good, but service is bad",
+            "output": {
+                "food": "POS",
+                "service": "NEG"
             }
-        ]
-    }
+        }
+    ]
+}
 ```
