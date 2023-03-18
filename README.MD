@@ -16,7 +16,7 @@ BrandPerception is an NLP powered tool to assist marketing teams in understandin
 | GET        | /reddit   | To retrieve posts with keyword, iphone |
 | POST       | /predict  | To predict for 1 sentence              |
 
-### Querystring for /reddit
+### /reddit
 
 | Query String | Description                                                    | Mandatory? | Example   |
 | ------------ | -------------------------------------------------------------- | ---------- | --------- |
@@ -41,4 +41,32 @@ Data in array with each of the object having
 'body', 'score', 'author', 'permalink', 'created_utc'
 ```
 
-### Details for /predict
+### /predict
+
+Post a body that contains a json to the current endpoint:
+
+```
+{
+    inputText: "Food is good, but service is bad"
+}
+```
+
+It returns a json of the following:
+
+```
+    output = {
+        "count": 1,
+        "negative": 1,
+        "positive": 1,
+        "neutral": 0,
+        "data":[
+            {
+                "input": "Food is good, but service is bad",
+                "output": {
+                    "food": "POS",
+                    "service": "NEG"
+                }
+            }
+        ]
+    }
+```
