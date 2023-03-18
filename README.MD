@@ -11,10 +11,11 @@ BrandPerception is an NLP powered tool to assist marketing teams in understandin
 
 ## API Endpoints
 
-| HTTP Verbs | Endpoints | Action                                 |
-| ---------- | --------- | -------------------------------------- |
-| GET        | /reddit   | To retrieve posts with keyword, iphone |
-| POST       | /predict  | To predict for 1 sentence              |
+| HTTP Verbs | Endpoints     | Action                                               |
+| ---------- | ------------- | ---------------------------------------------------- |
+| GET        | /reddit       | To retrieve posts with keyword, iphone               |
+| POST       | /predict      | To predict for 1 sentence                            |
+| POST       | /predict_file | To predict a textfile in CRLF or LF and save as CRLF |
 
 ### /reddit
 
@@ -43,6 +44,8 @@ Data in array with each of the object having
 
 ### /predict
 
+Reads a sentence. Sends a json output of the data.
+
 Post a body that contains a json to the current endpoint:
 
 ```
@@ -70,3 +73,19 @@ output = {
     ]
 }
 ```
+
+### /predict_file
+
+Reads a text file where each line contains a sentence. Sends a json output of the data.
+
+Input:
+
+```
+Food is good, but service is bad\r\n
+Pasta is good, but service is bad\r\n
+Mood is good, but service is bad\r\n
+Waiter is good, but service is bad\r\n
+```
+
+Output:
+Same as /predict
