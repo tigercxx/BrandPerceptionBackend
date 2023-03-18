@@ -2,8 +2,6 @@ const express = require('express');
 var os = require('os');
 const fs = require('fs');
 const util = require('util');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 const execPromise = util.promisify(require('child_process').exec);
 
@@ -88,11 +86,36 @@ app.post('/predict', async (req, res) => {
 });
 
 // Predict a text file
-app.post('/predict_text', upload.single('avatar'), (req, res) => {
+app.post('/predict_file', async (req, res) => {
 	try {
-		const inputText = req.file;
+		const inputText = req.body;
 		console.log(inputText);
-		console.log(req.body);
+
+		// writes text to file. will always replace text. needs to have data and sentence dir
+		var file = fs.createWriteStream('../data/sentence/test.txt');
+		file.on('error', function (err) {
+			/* error handling */
+			console.log(error);
+		});
+
+		inputText['body'].forEach(function (v) {
+			console.log(v);
+			file.write(v + '\r\n');
+			console.log('Data has been written to file successfully.');
+		});
+		file.end();
+
+		await runPythonScript();
+
+		fs.readFile('../data/output/output.json', 'utf8', (error, data) => {
+			if (error) {
+				console.log(error);
+				return;
+			}
+			console.log('Output written to output.json');
+			result = JSON.parse(data);
+			res.json(result);
+		});
 	} catch (error) {
 		console.error(error);
 		res.status(500).send('Internal Server Error');
