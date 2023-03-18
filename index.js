@@ -2,6 +2,8 @@ const express = require('express');
 var os = require('os');
 const fs = require('fs');
 const util = require('util');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const execPromise = util.promisify(require('child_process').exec);
 
@@ -56,7 +58,7 @@ const runPythonScript = async () => {
 
 // Predict a single sentence
 app.post('/predict', async (req, res) => {
-	result = null;
+	let result = null;
 	try {
 		const inputText = await req.body.inputText;
 		console.log(inputText);
@@ -86,6 +88,16 @@ app.post('/predict', async (req, res) => {
 });
 
 // Predict a text file
+app.post('/predict_text', upload.single('avatar'), (req, res) => {
+	try {
+		const inputText = req.file;
+		console.log(inputText);
+		console.log(req.body);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send('Internal Server Error');
+	}
+});
 
 // Predict an array of sentence
 
