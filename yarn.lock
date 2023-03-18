@@ -850,6 +850,11 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+winax@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/winax/-/winax-3.3.4.tgz#fc2698401a7e670e1a88289b6730253d20a9d50f"
+  integrity sha512-hwh/tFGGCZgrvoxgd8xqSYgnWYUHvqLUMTtKgV/qSEwy4MC31JUukhBlKbBlqpnuDkzMGpxavyI4YCyrdtagyA==
+
 ws@^3.3.1:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/ws/-/ws-3.3.3.tgz#f1cf84fe2d5e901ebce94efaece785f187a228f2"

@@ -10,6 +10,7 @@
     "fs": "^0.0.1-security",
     "node-fetch": "2.6.0",
     "querystring": "^0.2.1",
-    "snoowrap": "^1.23.0"
+    "snoowrap": "^1.23.0",
+    "winax": "^3.3.4"
   }
 }
