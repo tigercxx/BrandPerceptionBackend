@@ -123,6 +123,19 @@ app.post('/predict_file', async (req, res) => {
 });
 
 // Predict an array of sentence
+app.post('/predict_reddit', async (req, res) => {
+	try {
+		const input = await req.body;
+		const response = await getPosts(req, res);
+		
+		// get only the body
+		
+
+		res.json(response);
+	} catch (error) {
+		res.status(500).send('Internal Server Error');
+	}
+});
 
 app.listen(port, () => {
 	console.log(`Server listening at ${port}`);

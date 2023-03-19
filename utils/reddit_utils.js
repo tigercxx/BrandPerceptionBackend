@@ -3,7 +3,7 @@ const axios = require('axios');
 const { preprocessing, addQueryIntoParams, createQuery } = require('./utils.js');
 
 const getPosts = async (req, res) => {
-	const { question, subreddit, before, after, score, size } = req.query;
+	const { question, subreddit, before, after, score, size } = req.body;
 
 	const queryParams = {};
 	addQueryIntoParams(
@@ -17,18 +17,27 @@ const getPosts = async (req, res) => {
 	addQueryIntoParams('before', before, queryParams);
 	addQueryIntoParams('after', after, queryParams);
 	addQueryIntoParams('score', score, queryParams);
-	addQueryIntoParams('size', typeof size !== 'undefined' ? size : '500', queryParams);
+	// size limit is 500
+	addQueryIntoParams('size', typeof size !== 'undefined' ? size : '50', queryParams);
 
 	const url = 'https://api.pushshift.io/reddit/search/comment';
+	console.log(url + createQuery(queryParams));
 
 	try {
 		const response = await axios.get(url + createQuery(queryParams));
+
 		let data = response.data['data'];
+
 		for (let i = 0; i < data.length; i++) {
 			data[i]['body'] = preprocessing(data[i]['body']);
 			const date = new Date(data[i]['created_utc'] * 1000);
 			data[i]['created_utc'] = date.toLocaleString();
 		}
+
+		data = data.filter(function (post) {
+			return post['body'] !== 'removed' && post['body'] !== 'deleted';
+		});
+
 		return data;
 	} catch (error) {
 		console.error(error);
