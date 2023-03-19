@@ -89,11 +89,11 @@ const predict = async (inputText) => {
 		console.log('no');
 		inputText.forEach(function (v) {
 			console.log(v);
-			file.write(v + '\r\n');
+			file.write(preprocessing(v) + '\r\n');
 			console.log('Data has been written to file successfully.');
 		});
 	} else {
-		file.write(inputText + '\r\n');
+		file.write(preprocessing(inputText) + '\r\n');
 	}
 	file.end();
 
