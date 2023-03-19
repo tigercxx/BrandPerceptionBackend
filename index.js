@@ -1,11 +1,8 @@
 const express = require('express');
-var os = require('os');
 const fs = require('fs');
-const util = require('util');
-
-const execPromise = util.promisify(require('child_process').exec);
 
 const { getPosts } = require('./utils/reddit_utils.js');
+const { predict } = require('./utils/utils.js');
 
 const app = express();
 const port = 4242;
@@ -34,51 +31,12 @@ app.get('/reddit/', async (req, res) => {
 	res.send(response);
 });
 
-// To run the Python Script, we will run locally in the current machine
-// There needs to be other repo that is working with this project
-// To run the script, we will call .bat (windows) or .sh (max/linux)
-const runPythonScript = async () => {
-	try {
-		let stdout, stderr;
-		if (os.platform() === 'win32') {
-			({ stdout, stderr } = await execPromise('cd ../closedAI/e2e & call work_sentence.bat'));
-		} else {
-			({ stdout, stderr } = await execPromise(
-				'(cd ../closedAI/e2e; source work_sentence.sh)'
-			));
-		}
-		console.log('stdout:', stdout);
-		console.log('stderr:', stderr);
-	} catch (err) {
-		console.error(err);
-	}
-};
-
 // Predict a single sentence
 app.post('/predict', async (req, res) => {
-	let result = null;
 	try {
-		const inputText = await req.body.inputText;
-		console.log(inputText);
-		// writes text to file. will always replace text. needs to have data and sentence dir
-		fs.writeFile('../data/sentence/test.txt', inputText, (err) => {
-			if (err) {
-				console.log(error);
-				return;
-			}
-			console.log('Data has been written to file successfully.');
-		});
-		await runPythonScript();
+		const result = await predict(req.body.inputText);
 
-		fs.readFile('../data/output/output.json', 'utf8', (error, data) => {
-			if (error) {
-				console.log(error);
-				return;
-			}
-			console.log('Output written to output.json');
-			result = JSON.parse(data);
-			res.json(result);
-		});
+		res.json(result);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send('Internal Server Error');
@@ -91,31 +49,9 @@ app.post('/predict_file', async (req, res) => {
 		const inputText = req.body;
 		console.log(inputText);
 
-		// writes text to file. will always replace text. needs to have data and sentence dir
-		var file = fs.createWriteStream('../data/sentence/test.txt');
-		file.on('error', function (err) {
-			/* error handling */
-			console.log(error);
-		});
-
-		inputText['body'].forEach(function (v) {
-			console.log(v);
-			file.write(v + '\r\n');
-			console.log('Data has been written to file successfully.');
-		});
-		file.end();
-
-		await runPythonScript();
-
-		fs.readFile('../data/output/output.json', 'utf8', (error, data) => {
-			if (error) {
-				console.log(error);
-				return;
-			}
-			console.log('Output written to output.json');
-			result = JSON.parse(data);
-			res.json(result);
-		});
+		const result = await predict(inputText['body']);
+		console.log(result);
+		res.json(result);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send('Internal Server Error');
@@ -125,13 +61,13 @@ app.post('/predict_file', async (req, res) => {
 // Predict an array of sentence
 app.post('/predict_reddit', async (req, res) => {
 	try {
-		const input = await req.body;
 		const response = await getPosts(req, res);
-		
-		// get only the body
-		
 
-		res.json(response);
+		// get only the posts body
+		let postsBody = response.map(({ body }) => body);
+		let result = await predict(postsBody);
+
+		res.json(result);
 	} catch (error) {
 		res.status(500).send('Internal Server Error');
 	}

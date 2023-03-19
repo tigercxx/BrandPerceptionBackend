@@ -21,7 +21,6 @@ const getPosts = async (req, res) => {
 	addQueryIntoParams('size', typeof size !== 'undefined' ? size : '50', queryParams);
 
 	const url = 'https://api.pushshift.io/reddit/search/comment';
-	console.log(url + createQuery(queryParams));
 
 	try {
 		const response = await axios.get(url + createQuery(queryParams));
