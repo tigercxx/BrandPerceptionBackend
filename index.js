@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 
 const { getPosts } = require('./utils/reddit_utils.js');
 const { predict } = require('./utils/utils.js');
@@ -44,7 +43,7 @@ app.post('/predict', async (req, res) => {
 });
 
 // Predict a text file
-app.post('/predict_file', async (req, res) => {
+app.post('/predict-file', async (req, res) => {
 	try {
 		const inputText = req.body;
 		console.log(inputText);
@@ -59,13 +58,19 @@ app.post('/predict_file', async (req, res) => {
 });
 
 // Predict an array of sentence
-app.post('/predict_reddit', async (req, res) => {
+app.post('/predict-reddit', async (req, res) => {
 	try {
 		const response = await getPosts(req, res);
 
 		// get only the posts body
 		let postsBody = response.map(({ body }) => body);
-		let result = await predict(postsBody);
+		let predictedPostsBody = await predict(postsBody);
+		console.log(predictedPostsBody);
+
+		let result = {
+			reddit: response,
+			predictions: predictedPostsBody,
+		};
 
 		res.json(result);
 	} catch (error) {
