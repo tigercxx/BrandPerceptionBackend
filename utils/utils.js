@@ -86,7 +86,6 @@ const predict = async (inputText) => {
 	});
 
 	if (Array.isArray(inputText)) {
-		console.log('no');
 		inputText.forEach(function (v) {
 			console.log(v);
 			file.write(preprocessing(v) + '\r\n');
@@ -95,7 +94,12 @@ const predict = async (inputText) => {
 	} else {
 		file.write(preprocessing(inputText) + '\r\n');
 	}
+
 	file.end();
+
+	if ((await fs.readFileSync(filePathTest).length) === 0) {
+		return null;
+	}
 
 	await runPythonScript();
 
