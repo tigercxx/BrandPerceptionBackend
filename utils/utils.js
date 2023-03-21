@@ -30,8 +30,8 @@ const preprocessing = (text) => {
 		.replace(/[\n\t]/g, '') // remove newlines
 		.replace(/&gt;/g, '') // remove "&gt;"
 		.replace(/[^\p{L}\p{N}\s]/gu, '')
-		.replace(/[^\w\s]|_/g, ' ') // remove punctuation marks and special characters
-		.replace(/  +/g, ' ')
+		.replace(/[^\w\s]|_/g, '') // remove punctuation marks and special characters
+		.replace(/  +/g, '')
 		.trim(); // remove emojis
 	return cleanedText;
 };

@@ -25,11 +25,6 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.get('/reddit/', async (req, res) => {
-	let response = await getPosts(req, res);
-	res.send(response);
-});
-
 // Predict a single sentence
 app.post('/predict', async (req, res) => {
 	try {

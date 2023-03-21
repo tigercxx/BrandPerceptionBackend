@@ -3,7 +3,7 @@ const axios = require('axios');
 const { preprocessing, addQueryIntoParams, createQuery } = require('./utils.js');
 
 const getPosts = async (req, res) => {
-	const { question, subreddit, before, after, score, size } = req.body;
+	const { q, subreddit, before, after, score, size } = req.body;
 
 	const queryParams = {};
 	addQueryIntoParams(
@@ -12,7 +12,7 @@ const getPosts = async (req, res) => {
 		queryParams
 	);
 
-	addQueryIntoParams('q', question, queryParams);
+	addQueryIntoParams('q', q, queryParams);
 	addQueryIntoParams('subreddit', subreddit, queryParams);
 	addQueryIntoParams('before', before, queryParams);
 	addQueryIntoParams('after', after, queryParams);
@@ -21,6 +21,7 @@ const getPosts = async (req, res) => {
 	addQueryIntoParams('size', typeof size !== 'undefined' ? size : '50', queryParams);
 
 	const url = 'https://api.pushshift.io/reddit/search/comment';
+	console.log(url + createQuery(queryParams));
 
 	try {
 		const response = await axios.get(url + createQuery(queryParams));
