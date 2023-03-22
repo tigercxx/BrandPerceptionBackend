@@ -71,7 +71,7 @@ const runPythonScript = async () => {
         } else {
             console.log("Python code running on Mac/linux");
             ({ stdout, stderr } = await execPromise(
-                "(cd ../closedAI/e2e; source work_sentence.sh)"
+                "(cd ../closedAI/e2e; ./work_sentence.sh)"
             ));
         }
         console.log("stdout:", stdout);
