@@ -60,7 +60,7 @@ const createQuery = (args) => {
 // To run the Python Script, we will run locally in the current machine
 // There needs to be other repo that is working with this project
 // To run the script, we will call .bat (windows) or .sh (max/linux)
-const runPythonScript = async () => {
+const runPythonScript = async (milliseconds) => {
     try {
         let stdout, stderr;
         if (os.platform() === "win32") {
@@ -71,7 +71,7 @@ const runPythonScript = async () => {
         } else {
             console.log("Python code running on Mac/linux");
             ({ stdout, stderr } = await execPromise(
-                "(cd ../closedAI/e2e; ./work_sentence.sh)"
+                `(cd ../closedAI/e2e; CUDA_VISIBLE_DEVICES=0; python work.py --absa_home ./bert-tfm-rest14-finetune --ckpt ./bert-tfm-rest14-finetune/checkpoint-1500 --model_type bert --data_dir ../../data/${milliseconds} --task_name ${milliseconds} --model_name_or_path bert-base-uncased --cache_dir ./cache --max_seq_length 128 --tagging_schema BIEOS)`
             ));
         }
         console.log("stdout:", stdout);
@@ -81,12 +81,18 @@ const runPythonScript = async () => {
     }
 };
 
-const predict = async (inputText) => {
+const predict = async (inputText, milliseconds) => {
     // writes text to file. will always replace text. needs to have data and sentence dir
     if (inputText.length === 0) {
         return null;
     }
-    const filePathTest = path.relative(__dirname, "data/sentence/test.txt");
+    ({ stdout, stderr } = await execPromise(
+        `(cd ../data; mkdir ${milliseconds} )`
+    ));
+    const filePathTest = path.relative(
+        __dirname,
+        `data/${milliseconds}/test.txt`
+    );
     let file = fs.createWriteStream(filePathTest);
 
     file.on("error", function (err) {
@@ -106,11 +112,17 @@ const predict = async (inputText) => {
 
     file.end();
 
-    await runPythonScript();
+    await runPythonScript(milliseconds);
 
-    const filePathOutput = path.relative(__dirname, "data/output/output.json");
+    const filePathOutput = path.relative(
+        __dirname,
+        `data/${milliseconds}/output.json`
+    );
 
     let jsonString = fs.readFileSync(filePathOutput, "utf8");
+    ({ stdout, stderr } = await execPromise(
+        `(cd ../data; rm -r ${milliseconds} )`
+    ));
     return JSON.parse(jsonString);
 };
 
