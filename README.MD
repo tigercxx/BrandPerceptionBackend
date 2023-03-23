@@ -1,5 +1,7 @@
 # BrandPerception Backend
 
+Use in conjunction with [Frontend](https://github.com/tigercxx/BrandPerception/tree/gh-pages) and [ML model](https://github.com/tigercxx/BrandPerceptionModel).
+
 ## Introduction
 
 BrandPerception is an NLP powered tool to assist marketing teams in understanding the market sentiments of their brand.
